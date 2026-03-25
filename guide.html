@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Guide | KejaHaunt</title>
+  <meta name="description" content="Budget guide, housing insights, and viewing checklist for Nairobi students using KejaHaunt.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="guide">
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="brand-lockup">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">KH</span>
+          <span>
+            <strong>KejaHaunt</strong>
+            <small>Student Housing Intelligence</small>
+          </span>
+        </a>
+      </div>
+      <nav class="site-nav">
+        <a href="index.html">Home</a>
+        <a href="explore.html">Explore</a>
+        <a href="map.html">Map</a>
+        <a class="active" href="guide.html">Guide</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="page-intro">
+        <p class="eyebrow">Guide</p>
+        <h1>What students should know before paying deposit.</h1>
+        <p>This page turns the notebook into practical advice: budget bands, hidden costs, viewings checklist, and scam warnings.</p>
+      </section>
+
+      <section class="insight-grid" id="guide-insights"></section>
+
+      <section class="section">
+        <div class="section-heading">
+          <p class="eyebrow">Budget Bands</p>
+          <h2>How to think about allowance vs comfort</h2>
+        </div>
+        <div class="budget-grid" id="budget-bands"></div>
+      </section>
+
+      <section class="check-grid">
+        <article class="panel-card">
+          <p class="eyebrow">Do this</p>
+          <h2>Viewing checklist</h2>
+          <ul id="checklist"></ul>
+        </article>
+        <article class="panel-card panel-warning">
+          <p class="eyebrow">Walk away if</p>
+          <h2>Red flags</h2>
+          <ul id="redFlags"></ul>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

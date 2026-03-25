@@ -1,0 +1,11 @@
+{
+  "name": "kejahaunt-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static MVP for the KejaHaunt Nairobi student housing finder.",
+  "scripts": {
+    "dev": "python -m http.server 4173 --bind 127.0.0.1",
+    "preview": "python -m http.server 4173 --bind 127.0.0.1",
+    "check": "node --check app.js"
+  }
+}

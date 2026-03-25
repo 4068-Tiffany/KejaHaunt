@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KejaHaunt | Student Housing Intelligence</title>
+  <meta name="description" content="Browse Nairobi student zones, compare monthly burn, and discover where to live near campus with KejaHaunt.">
+  <meta name="theme-color" content="#9c3d24">
+  <meta property="og:title" content="KejaHaunt | Student Housing Intelligence">
+  <meta property="og:description" content="A more practical way for comrades to compare Nairobi student housing.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="home">
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="brand-lockup">
+        <a class="brand" href="index.html">
+          <span class="brand-mark">KH</span>
+          <span>
+            <strong>KejaHaunt</strong>
+            <small>Student Housing Intelligence</small>
+          </span>
+        </a>
+      </div>
+      <nav class="site-nav">
+        <a class="active" href="index.html">Home</a>
+        <a href="explore.html">Explore</a>
+        <a href="map.html">Map</a>
+        <a href="guide.html">Guide</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="briefing-header">
+        <div>
+          <p class="eyebrow">Housing Intelligence Layer</p>
+          <h1>SCANNING: NAIROBI_STUDENT_ZONES_<span class="counter" data-counter="2026">2026</span></h1>
+        </div>
+        <div class="live-chip">
+          <span class="live-dot"></span>
+          <span>LIVE</span>
+        </div>
+      </section>
+
+      <section class="briefing-grid">
+        <article class="brief-panel burn-core">
+          <div class="brief-head">
+            <p class="eyebrow">Core Metric</p>
+            <a class="text-link" href="explore.html">Open full explorer</a>
+          </div>
+          <h2>Total Burn Calculator</h2>
+          <p class="hero-text">The real question is not "what is the rent?" It is "what will this room cost me every month after transport and KPLC?"</p>
+          <div class="burn-core-grid">
+            <div>
+              <p class="eyebrow">Typical bedsitter burn</p>
+              <p class="callout-stat">KES 14K-16K</p>
+            </div>
+            <div class="chip-stack">
+              <span>RENT</span>
+              <span>MATATU</span>
+              <span>KPLC</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="brief-panel alert-log">
+          <div class="terminal-bar">
+            <span></span>
+            <span></span>
+            <span></span>
+            <p>[SYSTEM_ALERTS]</p>
+          </div>
+          <div id="alert-log"></div>
+        </article>
+
+        <article class="brief-panel">
+          <div class="brief-head">
+            <p class="eyebrow">Matatu Tax</p>
+            <span class="tier-chip">COMMUTE_MODEL</span>
+          </div>
+          <h2>10 mins closer to campus can justify about KES 700 more in rent.</h2>
+          <p>That flips how students should compare a "cheap" room in a far zone vs a slightly pricier one near campus.</p>
+        </article>
+
+        <article class="brief-panel warning-bill">
+          <div class="brief-head">
+            <p class="eyebrow">Hidden Tax</p>
+            <span class="warning-stamp">WARNING</span>
+          </div>
+          <h2>KPLC shared meter</h2>
+          <div class="bill-row"><span>Private meter baseline</span><strong>KES 600</strong></div>
+          <div class="bill-row"><span>Shared meter monthly</span><strong>KES 1,200</strong></div>
+          <div class="bill-row bill-total"><span>Leakage over 4 years</span><strong>KES 28,800</strong></div>
+        </article>
+
+        <article class="brief-panel burn-meter-panel">
+          <div class="brief-head">
+            <p class="eyebrow">Burn Meter</p>
+            <span class="tier-chip">MONTHLY_BURN</span>
+          </div>
+          <div id="burn-meter"></div>
+        </article>
+
+        <article class="brief-panel truth-panel">
+          <div class="brief-head">
+            <p class="eyebrow">Lies vs Truth</p>
+            <span class="tier-chip">RENT_CHECK</span>
+          </div>
+          <div id="truth-table"></div>
+        </article>
+
+        <article class="brief-panel hotspot-panel">
+          <div class="brief-head">
+            <p class="eyebrow">Zone Tier Map</p>
+            <a class="text-link" href="map.html">Open real map</a>
+          </div>
+          <div class="hotspot-map">
+            <span class="hotspot hotspot-a">Zimmerman</span>
+            <span class="hotspot hotspot-b">Ngara</span>
+            <span class="hotspot hotspot-c">South B</span>
+          </div>
+          <div id="zone-hotspots"></div>
+        </article>
+
+        <article class="brief-panel">
+          <div class="brief-head">
+            <p class="eyebrow">Notebook takeaway</p>
+            <span class="timestamp">Last updated: 2026-03-25 17:00 EAT</span>
+          </div>
+          <p class="terminal-copy">Zimmerman, Kahawa West, Embakasi, and Ngara consistently stay near the top once you stop trusting headline rent and calculate burn instead.</p>
+          <span class="cursor"></span>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

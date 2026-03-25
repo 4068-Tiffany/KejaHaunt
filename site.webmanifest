@@ -1,0 +1,15 @@
+{
+  "name": "KejaHaunt",
+  "short_name": "KejaHaunt",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f5f0e8",
+  "theme_color": "#a63d2c",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
