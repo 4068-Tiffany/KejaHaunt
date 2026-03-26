@@ -1366,6 +1366,19 @@ input[type="range"] {
     grid-auto-flow: row;
   }
 
+  .page-intro {
+    margin-bottom: 1rem;
+  }
+
+  .page-intro h1,
+  .section-heading h2,
+  .results-header h2,
+  .panel-card h2,
+  .detail-card h2 {
+    font-size: clamp(1.45rem, 7vw, 2rem);
+    line-height: 1.02;
+  }
+
   .hero-copy,
   .hero-feature,
   .path-card,
@@ -1383,6 +1396,11 @@ input[type="range"] {
 
   .gallery-strip {
     padding: 1rem 1rem 0;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .gallery-strip .photo-card:nth-child(3) {
+    display: none;
   }
 
   .burn-panel,
@@ -1401,5 +1419,176 @@ input[type="range"] {
 
   .map-surface {
     min-height: 420px;
+  }
+
+  .explore-layout {
+    gap: 0.85rem;
+  }
+
+  .filter-panel {
+    gap: 0.8rem;
+  }
+
+  .results-stack {
+    gap: 0.8rem;
+  }
+
+  .results-controls {
+    display: grid;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  .sort-control select {
+    min-width: 0;
+  }
+
+  .explore-grid {
+    gap: 0.85rem;
+  }
+
+  .signal-row {
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .signal-chip {
+    font-size: 0.68rem;
+    padding: 0.3rem 0.5rem;
+  }
+
+  .chip-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chip-row span,
+  .tier-chip,
+  .burn-chip {
+    width: 100%;
+    text-align: center;
+  }
+
+  .briefing-grid,
+  .results-summary,
+  .explore-brief {
+    gap: 0.8rem;
+  }
+}
+
+@media (max-width: 560px) {
+  .site-header {
+    gap: 0.75rem;
+  }
+
+  .brand {
+    gap: 0.7rem;
+  }
+
+  .brand-mark {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
+
+  .site-nav a {
+    padding: 0.75rem 0.85rem;
+    font-size: 0.72rem;
+  }
+
+  .explore-brief {
+    display: none;
+  }
+
+  .results-summary {
+    display: none;
+  }
+
+  .filter-head h2 {
+    font-size: 1rem;
+  }
+
+  .ghost-button {
+    padding: 0.55rem 0.75rem;
+    font-size: 0.7rem;
+  }
+
+  .filter-panel label {
+    gap: 0.35rem;
+  }
+
+  select {
+    padding: 0.85rem 0.9rem;
+    font-size: 0.92rem;
+  }
+
+  .budget-card,
+  .detail-card {
+    padding: 0.85rem;
+  }
+
+  .budget-card h2 {
+    font-size: 1.05rem;
+  }
+
+  .results-header {
+    gap: 0.6rem;
+  }
+
+  .results-header p,
+  #resultCount {
+    margin: 0;
+  }
+
+  .card-body {
+    padding: 0 0.8rem 0.8rem;
+  }
+
+  .card-top h3,
+  .ranking-card h3,
+  .summary-tile h3 {
+    font-size: 1.08rem;
+  }
+
+  .vibe-line,
+  .card-note,
+  .budget-card p,
+  .summary-tile p {
+    font-size: 0.9rem;
+  }
+
+  .burn-panel strong {
+    font-size: 1.25rem;
+  }
+
+  .chip-row {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-strip {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    padding: 0.8rem 0.8rem 0;
+  }
+
+  .photo-card {
+    min-height: 78px;
+    padding: 0.55rem;
+  }
+
+  .photo-card strong {
+    font-size: 0.8rem;
+  }
+
+  .signal-row {
+    margin-bottom: 0.6rem;
+  }
+
+  .filter-panel,
+  .explore-card,
+  .panel-card,
+  .budget-band,
+  .insight-card,
+  .map-board,
+  .map-detail {
+    border-radius: 18px;
   }
 }
