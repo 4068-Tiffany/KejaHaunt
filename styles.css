@@ -1432,14 +1432,28 @@ input[type="range"] {
   }
 
   .site-header,
-  .site-nav,
   .stat-row,
   .mini-stat-grid {
     grid-template-columns: 1fr;
   }
 
   .site-nav {
-    grid-auto-flow: row;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.55rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .site-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-nav a {
+    white-space: nowrap;
+    flex: 0 0 auto;
   }
 
   .page-intro {
@@ -1573,7 +1587,7 @@ input[type="range"] {
   }
 
   .site-nav a {
-    padding: 0.75rem 0.85rem;
+    padding: 0.72rem 0.8rem;
     font-size: 0.72rem;
   }
 
