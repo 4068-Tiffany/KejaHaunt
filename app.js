@@ -173,6 +173,12 @@ function renderExplore() {
   const resultsSummary = document.querySelector("#resultsSummary");
   const resetFilters = document.querySelector("#resetFilters");
 
+  function getVisibleLimit() {
+    if (window.innerWidth <= 560) return 4;
+    if (window.innerWidth <= 900) return 6;
+    return 8;
+  }
+
   function getMatchReason(area, state) {
     const reasons = [];
     if (state.campus !== "all" && area.campus === state.campus) reasons.push("campus match");
@@ -209,7 +215,7 @@ function renderExplore() {
         return { ...area, burn, score: scoreArea(area, state), reasons: getMatchReason(area, state) };
       })
       .filter((area) => state.campus === "all" || area.campus === state.campus || area.score > 55)
-      , state.sortBy).slice(0, 8);
+      , state.sortBy).slice(0, getVisibleLimit());
 
     resultTitle.textContent = state.campus === "all" ? "Best student-friendly areas right now" : `Best matches near ${state.campus}`;
     resultCount.textContent = `${sorted.length} areas`;
@@ -217,6 +223,7 @@ function renderExplore() {
     if (sorted.length) {
       const best = sorted[0];
       const avgBurn = Math.round(sorted.reduce((sum, area) => sum + area.burn.total, 0) / sorted.length);
+      const commuteEdge = sorted.reduce((bestArea, area) => area.matatuFare < bestArea.matatuFare ? area : bestArea, sorted[0]);
       resultsSummary.innerHTML = `
         <article class="summary-tile">
           <p class="eyebrow">Best current pick</p>
@@ -230,8 +237,8 @@ function renderExplore() {
         </article>
         <article class="summary-tile">
           <p class="eyebrow">Best commute edge</p>
-          <h3>${sorted.reduce((bestArea, area) => area.matatuFare < bestArea.matatuFare ? area : bestArea, sorted[0]).area}</h3>
-          <p>Lowest fare in this filtered view</p>
+          <h3>${commuteEdge.area}</h3>
+          <p>${formatKES(commuteEdge.matatuFare)} fare in this filtered view</p>
         </article>
       `;
     } else {
@@ -246,30 +253,50 @@ function renderExplore() {
 
     resultsNode.innerHTML = sorted.map((area) => `
       <article class="explore-card">
-        <div class="gallery-strip">
-          ${area.gallery.map((label, index) => photoTag(label, area, index)).join("")}
+        <div class="explore-visual">
+          <div class="photo-card photo-1 hero-photo">
+            <span>${area.campus}</span>
+            <strong>${area.area}</strong>
+          </div>
+          <div class="mini-gallery">
+            ${area.gallery.slice(1).map((label, index) => photoTag(label, area, index + 1)).join("")}
+          </div>
         </div>
         <div class="card-body">
           <div class="card-top">
-            <div>
+            <div class="title-stack">
               <p class="eyebrow">${area.campus}</p>
               <h3>${area.area}</h3>
+              <p class="vibe-line">${area.vibe}</p>
             </div>
-            <span class="tier-chip">${area.tier}</span>
+            <div class="card-side-meta">
+              <span class="tier-chip">${area.tier}</span>
+              <div class="status-line">
+                <span class="status-dot ${getStatusTone(area.valueScore).className}"></span>
+                <span>${getStatusTone(area.valueScore).label}</span>
+              </div>
+            </div>
           </div>
-          <div class="status-line">
-            <span class="status-dot ${getStatusTone(area.valueScore).className}"></span>
-            <span>${getStatusTone(area.valueScore).label}</span>
-          </div>
-          <p class="vibe-line">${area.vibe}</p>
           <div class="signal-row">
             ${area.reasons.map((reason) => `<span class="signal-chip">${reason}</span>`).join("")}
           </div>
-          <div class="chip-row">
-            <span>${roomAdjustments[state.roomType].label}</span>
-            <span>${formatKES(area.burn.rent)} estimated rent</span>
-            <span>${formatKES(area.matatuFare)} fare</span>
-            <span>${area.avgWalk} min walk</span>
+          <div class="metric-grid">
+            <div class="metric-pill">
+              <span>Rent</span>
+              <strong>${formatKES(area.burn.rent)}</strong>
+            </div>
+            <div class="metric-pill">
+              <span>Matatu</span>
+              <strong>${formatKES(area.matatuFare)}</strong>
+            </div>
+            <div class="metric-pill">
+              <span>Walk</span>
+              <strong>${area.avgWalk} min</strong>
+            </div>
+            <div class="metric-pill">
+              <span>Room</span>
+              <strong>${roomAdjustments[state.roomType].label}</strong>
+            </div>
           </div>
           <div class="burn-panel">
             <div>
@@ -298,6 +325,8 @@ function renderExplore() {
     field.addEventListener("input", draw);
     field.addEventListener("change", draw);
   });
+
+  window.addEventListener("resize", draw);
 
   draw();
 }

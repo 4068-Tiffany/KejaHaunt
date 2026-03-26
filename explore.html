@@ -31,37 +31,12 @@
     <main>
       <section class="page-intro">
         <p class="eyebrow">Explore</p>
-        <h1>Filter the city like a student would.</h1>
+        <h1>Filter the city better.</h1>
         <p>Choose what matters, then compare actual living cost instead of chasing the cheapest-looking room.</p>
       </section>
 
-      <section class="explore-brief">
-        <article class="brief-stat">
-          <p class="eyebrow">Search logic</p>
-          <h2>Monthly burn beats headline rent.</h2>
-          <p>The explorer ranks zones using your budget, walk tolerance, meter choice, and campus fit all at once.</p>
-        </article>
-        <article class="brief-stat">
-          <p class="eyebrow">Fast facts</p>
-          <div class="mini-stat-grid">
-            <div>
-              <strong>14</strong>
-              <span>zones indexed</span>
-            </div>
-            <div>
-              <strong>KES 600</strong>
-              <span>shared meter penalty</span>
-            </div>
-            <div>
-              <strong>22 rides</strong>
-              <span>monthly matatu model</span>
-            </div>
-          </div>
-        </article>
-      </section>
-
       <section class="explore-layout">
-        <form class="filter-panel">
+        <form class="filter-panel filter-panel-horizontal">
           <div class="filter-head">
             <div>
               <p class="eyebrow">Filter stack</p>
@@ -69,38 +44,40 @@
             </div>
             <button class="ghost-button" id="resetFilters" type="button">Reset</button>
           </div>
-          <label>
-            <span>Campus zone</span>
-            <select id="campus">
-              <option value="all">Any campus</option>
-            </select>
-          </label>
-          <label>
-            <span>Monthly budget</span>
-            <select id="budget">
-              <option value="10000">KES 10,000</option>
-              <option value="15000">KES 15,000</option>
-              <option value="20000" selected>KES 20,000</option>
-              <option value="25000">KES 25,000</option>
-            </select>
-          </label>
-          <label>
-            <span>Room type</span>
-            <select id="roomType">
-              <option value="single">Single room</option>
-              <option value="bedsitter" selected>Bedsitter</option>
-              <option value="studio">Studio</option>
-              <option value="ensuite">En suite bedsitter</option>
-            </select>
-          </label>
-          <label>
-            <span>KPLC meter</span>
-            <select id="meter">
-              <option value="private" selected>Private</option>
-              <option value="shared">Shared</option>
-            </select>
-          </label>
-          <label>
+          <div class="filter-grid">
+            <label>
+              <span>Campus zone</span>
+              <select id="campus">
+                <option value="all">Any campus</option>
+              </select>
+            </label>
+            <label>
+              <span>Monthly budget</span>
+              <select id="budget">
+                <option value="10000">KES 10,000</option>
+                <option value="15000">KES 15,000</option>
+                <option value="20000" selected>KES 20,000</option>
+                <option value="25000">KES 25,000</option>
+              </select>
+            </label>
+            <label>
+              <span>Room type</span>
+              <select id="roomType">
+                <option value="single">Single room</option>
+                <option value="bedsitter" selected>Bedsitter</option>
+                <option value="studio">Studio</option>
+                <option value="ensuite">En suite bedsitter</option>
+              </select>
+            </label>
+            <label>
+              <span>KPLC meter</span>
+              <select id="meter">
+                <option value="private" selected>Private</option>
+                <option value="shared">Shared</option>
+              </select>
+            </label>
+          </div>
+          <label class="range-stack">
             <span>Max walk to campus</span>
             <input id="walkLimit" type="range" min="10" max="35" step="1" value="25">
             <strong id="walkValue">25 min</strong>
@@ -113,7 +90,7 @@
           </div>
         </form>
 
-        <div class="results-stack">
+        <div class="results-stack explore-results-shell">
           <div class="results-header">
             <div>
               <p class="eyebrow">Matches</p>
