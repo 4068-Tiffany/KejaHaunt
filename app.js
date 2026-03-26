@@ -13,6 +13,11 @@ function getEstimatedRent(area, roomType) {
   return Math.max(area.minRent, Math.min(area.maxRent, adjusted));
 }
 
+function campusMatches(areaCampus, selectedCampus) {
+  if (selectedCampus === "all") return true;
+  return areaCampus.split("/").includes(selectedCampus);
+}
+
 function getMonthlyBurn(area, roomType, meterType) {
   const rent = getEstimatedRent(area, roomType);
   const matatuMonthly = area.matatuFare * 2 * 22;
@@ -132,10 +137,199 @@ function renderDashboardPanels() {
   `;
 }
 
+function renderCommandHome() {
+  const selectorNode = document.querySelector("#homeZoneSelector");
+  const surface = document.querySelector("#intelSurface");
+  if (!selectorNode || !surface) return;
+
+  const campusSelect = document.querySelector("#homeCampus");
+  const rentSlider = document.querySelector("#homeTargetRent");
+  const rentValue = document.querySelector("#homeTargetRentValue");
+  const zoneName = document.querySelector("#selectedZoneName");
+  const zoneTier = document.querySelector("#selectedZoneTier");
+  const zoneHook = document.querySelector("#selectedZoneHook");
+  const burnBars = document.querySelector("#burnBars");
+  const hiddenCostDelta = document.querySelector("#hiddenCostDelta");
+  const zoneTags = document.querySelector("#selectedZoneTags");
+  const truth = document.querySelector("#intelTruth");
+  const alerts = document.querySelector("#homeAlerts");
+  const zonePulse = document.querySelector("#zonePulse");
+
+  campusChoices.forEach((campus) => {
+    const option = document.createElement("option");
+    option.value = campus;
+    option.textContent = campus;
+    campusSelect.append(option);
+  });
+
+  let activeArea = "Zimmerman";
+
+  function getHomeTags(area) {
+    const tags = [];
+    if (area.valueScore >= 66) tags.push("VALUE_ZONE");
+    if (area.matatuFare <= 40) tags.push("LOW_TRANSPORT");
+    if (area.avgWalk <= 20) tags.push("PREMIUM_ACCESS");
+    if (area.baseRent <= 6500) tags.push("LOW_RENT");
+    if (area.tier === "Satellite") tags.push("SATELLITE_EDGE");
+    return tags.slice(0, 3);
+  }
+
+  function getBoardAreas(filteredAreas) {
+    const limit = window.innerWidth <= 560 ? 3 : 4;
+    const rest = filteredAreas
+      .filter((area) => area.area !== activeArea)
+      .sort((a, b) => b.valueScore - a.valueScore);
+
+    return [
+      filteredAreas.find((area) => area.area === activeArea),
+      ...rest
+    ].filter(Boolean).slice(0, limit);
+  }
+
+  function drawSelectors(filteredAreas) {
+    selectorNode.innerHTML = filteredAreas.map((area) => `
+      <button class="zone-chip ${area.area === activeArea ? "active" : ""}" type="button" data-zone="${area.area}">
+        ${area.area}
+      </button>
+    `).join("");
+
+    selectorNode.querySelectorAll("[data-zone]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeArea = button.dataset.zone;
+        draw();
+      });
+    });
+  }
+
+  function drawMap(filteredAreas) {
+    const boardAreas = getBoardAreas(filteredAreas);
+
+    surface.innerHTML = boardAreas.map((area) => `
+      <button
+        class="intel-hotspot ${area.area === activeArea ? "active" : ""}"
+        type="button"
+        data-zone="${area.area}"
+      >
+        <span class="hotspot-header">
+          <span class="status-dot ${getStatusTone(area.valueScore).className}"></span>
+          <strong>${area.area}</strong>
+        </span>
+        <small>${area.campus}</small>
+        <span class="hotspot-metrics">
+          <span>${getStatusTone(area.valueScore).label}</span>
+          <span>${formatKES(area.matatuFare)} fare</span>
+          <span>${area.avgWalk} min walk</span>
+        </span>
+      </button>
+    `).join("");
+
+    surface.querySelectorAll("[data-zone]").forEach((button) => {
+      button.addEventListener("click", () => {
+        activeArea = button.dataset.zone;
+        draw();
+      });
+    });
+  }
+
+  function draw() {
+    const campus = campusSelect.value;
+    const filteredAreas = areaData.filter((area) => campusMatches(area.campus, campus));
+    if (!filteredAreas.find((area) => area.area === activeArea)) {
+      activeArea = filteredAreas[0].area;
+    }
+
+    const area = areaData.find((item) => item.area === activeArea);
+    const listedRent = area.baseRent;
+    const burn = getMonthlyBurn(area, "bedsitter", "private");
+    const hidden = burn.total - listedRent;
+    const target = Number(rentSlider.value);
+    const targetGap = burn.total - target;
+    const max = Math.max(burn.total, target, listedRent);
+
+    rentValue.textContent = formatKES(target);
+    drawSelectors(filteredAreas);
+    drawMap(filteredAreas);
+
+    zoneName.textContent = area.area;
+    zoneTier.textContent = area.tier;
+    zoneHook.textContent = area.note;
+
+    burnBars.innerHTML = `
+      <div class="burn-bar-set">
+        <div class="burn-bar-label">
+          <span>Listed rent</span>
+          <strong>${formatKES(listedRent)}</strong>
+        </div>
+        <div class="bar-shell">
+          <div class="bar-outer" style="width:${(burn.total / max) * 100}%">
+            <div class="bar-inner" style="width:${(listedRent / burn.total) * 100}%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="burn-bar-set">
+        <div class="burn-bar-label">
+          <span>Reality</span>
+          <strong>${formatKES(burn.total)}</strong>
+        </div>
+        <div class="bar-shell">
+          <div class="bar-outer reality-bar" style="width:${(burn.total / max) * 100}%"></div>
+        </div>
+      </div>
+    `;
+
+    hiddenCostDelta.innerHTML = `
+      <strong>Hidden costs delta: ${formatKES(hidden)}</strong>
+      <span>${formatKES(burn.matatuMonthly)} matatu + ${formatKES(burn.electricity)} KPLC + essentials buffer.</span>
+    `;
+
+    zoneTags.innerHTML = getHomeTags(area).map((tag) => `<span>${tag}</span>`).join("");
+
+    truth.innerHTML = `
+      <div class="truth-compact">
+        <article class="truth-stat">
+          <span>Listed</span>
+          <strong>${formatKES(listedRent)}</strong>
+        </article>
+        <article class="truth-stat">
+          <span>Reality</span>
+          <strong>${formatKES(burn.total)}</strong>
+        </article>
+        <article class="truth-stat">
+          <span>Hidden gap</span>
+          <strong>${formatKES(hidden)}</strong>
+        </article>
+      </div>
+      <div class="truth-mini-note">${area.area} :: target ${formatKES(target)} :: ${targetGap > 0 ? `${formatKES(targetGap)} above burn` : "target covers burn"}</div>
+    `;
+
+    alerts.innerHTML = `
+      <ul class="alert-list">
+        <li><span class="status-dot status-risk"></span>KPLC_SHARED_METER :: +KES 600 / month</li>
+        <li><span class="status-dot status-warn"></span>DISTANCE_TAX :: +KES 700 / 10 min closer</li>
+        <li><span class="status-dot status-good"></span>ACTIVE_ZONE :: ${area.area} :: ${getStatusTone(area.valueScore).label}</li>
+      </ul>
+    `;
+
+    zonePulse.innerHTML = `
+      <div class="pulse-grid">
+        <div><span>Campus</span><strong>${area.campus}</strong></div>
+        <div><span>Fare</span><strong>${formatKES(area.matatuFare)}</strong></div>
+        <div><span>Walk</span><strong>${area.avgWalk} min</strong></div>
+        <div><span>Score</span><strong>${area.valueScore}</strong></div>
+      </div>
+    `;
+  }
+
+  campusSelect.addEventListener("change", draw);
+  rentSlider.addEventListener("input", draw);
+  window.addEventListener("resize", draw);
+  draw();
+}
+
 function scoreArea(area, state) {
   const budget = Number(state.budget);
   const burn = getMonthlyBurn(area, state.roomType, state.meter);
-  const campusMatch = state.campus === "all" || area.campus === state.campus;
+  const campusMatch = campusMatches(area.campus, state.campus);
   const walkPenalty = Math.max(0, area.avgWalk - Number(state.walkLimit)) * 18;
   const budgetPenalty = Math.max(0, burn.total - budget) * 0.02;
   const campusBoost = campusMatch ? 22 : 0;
@@ -157,8 +351,7 @@ function renderExplore() {
     sortBy: document.querySelector("#sortBy")
   };
 
-  const unique = [...new Set(areaData.map((area) => area.campus))].sort();
-  unique.forEach((campus) => {
+  campusChoices.forEach((campus) => {
     const option = document.createElement("option");
     option.value = campus;
     option.textContent = campus;
@@ -181,7 +374,7 @@ function renderExplore() {
 
   function getMatchReason(area, state) {
     const reasons = [];
-    if (state.campus !== "all" && area.campus === state.campus) reasons.push("campus match");
+    if (campusMatches(area.campus, state.campus) && state.campus !== "all") reasons.push("campus match");
     if (area.valueScore >= 66) reasons.push("elite value score");
     if (area.matatuFare <= 40) reasons.push("lower transport tax");
     if (area.avgWalk <= Number(state.walkLimit)) reasons.push("walk fits limit");
@@ -214,7 +407,7 @@ function renderExplore() {
         const burn = getMonthlyBurn(area, state.roomType, state.meter);
         return { ...area, burn, score: scoreArea(area, state), reasons: getMatchReason(area, state) };
       })
-      .filter((area) => state.campus === "all" || area.campus === state.campus || area.score > 55)
+      .filter((area) => campusMatches(area.campus, state.campus) || state.campus === "all" || area.score > 55)
       , state.sortBy).slice(0, getVisibleLimit());
 
     resultTitle.textContent = state.campus === "all" ? "Best student-friendly areas right now" : `Best matches near ${state.campus}`;
@@ -470,10 +663,12 @@ function animateCounters() {
     const target = Number(counter.dataset.counter);
     const duration = 1200;
     const start = performance.now();
+    const hasDecimal = !Number.isInteger(target);
 
     function tick(now) {
       const progress = Math.min((now - start) / duration, 1);
-      counter.textContent = Math.floor(target * progress).toLocaleString();
+      const value = target * progress;
+      counter.textContent = hasDecimal ? value.toFixed(1) : Math.floor(value).toLocaleString();
       if (progress < 1) {
         requestAnimationFrame(tick);
       }
@@ -483,9 +678,50 @@ function animateCounters() {
   });
 }
 
+function setupMobileBriefing() {
+  const tabs = document.querySelectorAll("[data-brief-tab]");
+  const panels = document.querySelectorAll("[data-brief-group]");
+  if (!tabs.length || !panels.length) return;
+
+  let activeTab = "summary";
+
+  function applyState() {
+    const mobile = window.innerWidth <= 560;
+
+    panels.forEach((panel) => {
+      panel.classList.remove("brief-hidden");
+
+      if (!mobile) {
+        return;
+      }
+
+      const group = panel.dataset.briefGroup;
+      if (group !== activeTab) {
+        panel.classList.add("brief-hidden");
+      }
+    });
+
+    tabs.forEach((tab) => {
+      tab.classList.toggle("active", tab.dataset.briefTab === activeTab);
+    });
+  }
+
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      activeTab = tab.dataset.briefTab;
+      applyState();
+    });
+  });
+
+  window.addEventListener("resize", applyState);
+  applyState();
+}
+
 renderHomeRankings();
 renderDashboardPanels();
+renderCommandHome();
 renderExplore();
 renderMap();
 renderGuide();
 animateCounters();
+setupMobileBriefing();

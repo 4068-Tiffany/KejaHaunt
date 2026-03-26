@@ -305,3 +305,14 @@ const budgetGuides = {
   20000: "Try to keep rent below KES 10,000",
   25000: "Try to keep rent below KES 13,000"
 };
+
+const campusChoices = [
+  "KU",
+  "USIU",
+  "MKU",
+  "UoN",
+  "TUK",
+  "KCA",
+  "Strathmore",
+  "Daystar"
+];
